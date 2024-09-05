@@ -1,0 +1,64 @@
+# Compiled object files
+*.o
+*.obj
+
+# Compiled static libraries
+*.a
+*.lib
+
+# Compiled shared libraries
+*.so
+*.dll
+*.dylib
+
+# Executable files
+*.out
+*.exe
+
+# Debugging files
+*.dSYM/
+*.log
+
+# Dependency directories
+*.d
+*.deps
+*.gcda
+*.gcno
+
+# Build directories
+build/
+bin/
+obj/
+debug/
+release/
+
+# Makefile-related
+Makefile
+makefile
+*.mk
+
+# CMake build artifacts
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+*.cmake
+
+# IDEs and editors
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln
+*.swp
+*.swo
+
+# Backup files
+*~
+*.bak
+
+# MacOS
+.DS_Store
+
+# Windows
+Thumbs.db
+Desktop.ini
