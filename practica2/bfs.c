@@ -6,7 +6,9 @@
 #define ISADJACENT 1
 
 // Prototipo de la función BFS
-void breadthFirstSearch(int **adj, int numNodes, int startNode, int showOrder);
+void breadthFirstSearch(int **adj, int numNodes, int startNode);
+
+void depthFirstSearch(int **adj, int numNodes, int startNode);
 
 // Función para imprimir el menú y obtener la opción del usuario
 int printMenu();
@@ -22,12 +24,12 @@ int main() {
 
     // Inicializar la matriz de adyacencia
     int initMatrix[6][6] = {
-        { 0, 1, 1, 0, 0, 0 },
+        { 0, 1, 0, 0, 0, 0 },
+        { 0, 0, 1, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 1 },
         { 0, 0, 0, 0, 0, 0 },
-        { 0, 0, 0, 1, 1, 1 },
-        { 0, 0, 0, 0, 0, 0 },
-        { 0, 0, 0, 0, 0, 0 },
-        { 0, 0, 0, 0, 0, 0 }
+        { 0, 0, 0, 1, 0, 0 },
+        { 0, 0, 1, 0, 0, 0 }
     };
 
     // Copiar valores iniciales a la matriz dinámica
@@ -42,7 +44,11 @@ int main() {
     option = printMenu();
 
     // Ejecutar la búsqueda en anchura (BFS)
-    breadthFirstSearch(adjacentMatrix, numNodes, 0, option);
+    if(option == 1) {
+      depthFirstSearch(adjacentMatrix, numNodes, 0);
+    } else {
+      breadthFirstSearch(adjacentMatrix, numNodes, 0);
+    }
 
     // Liberar la memoria dinámica
     for (int i = 0; i < numNodes; i++) {
@@ -54,7 +60,7 @@ int main() {
 }
 
 // Implementación de la BFS
-void breadthFirstSearch(int **adj, int numNodes, int startNode, int showOrder) {
+void breadthFirstSearch(int **adj, int numNodes, int startNode) {
     int queueMaxCapacity = 10;
     int *queue = (int *)malloc(sizeof(int) * queueMaxCapacity);
     int *visitedNodes = (int *)calloc(numNodes, sizeof(int)); // Array de nodos visitados
@@ -64,18 +70,14 @@ void breadthFirstSearch(int **adj, int numNodes, int startNode, int showOrder) {
     visitedNodes[startNode] = VISITED;
     queue[rearIndex++] = startNode;
 
-    if (showOrder) {
-        printf("Order of visited nodes:\n");
-    }
+    printf("Order of visited nodes:\n");
 
     // Realizar BFS
     while (frontIndex < rearIndex) {
         int currentNode = queue[frontIndex++];
 
         // Imprimir el nodo actual si se solicita
-        if (showOrder) {
-            printf("Visited Node: %d\n", currentNode);
-        }
+        printf("Visited Node: %d\n", currentNode);
 
         // Explorar nodos adyacentes
         for (int i = 0; i < numNodes; i++) {
@@ -98,13 +100,32 @@ void breadthFirstSearch(int **adj, int numNodes, int startNode, int showOrder) {
     free(visitedNodes);
 }
 
+void depthFirstSearch(int **adj, int numNodes, int startNode) {
+    static int *visitedNodes = NULL; // Array de nodos visitados
+    if (visitedNodes == NULL) {
+        visitedNodes = (int *)calloc(numNodes, sizeof(int));
+    }
+
+    // Marcar el nodo como visitado
+    visitedNodes[startNode] = VISITED;
+
+    printf("Visited Node: %d\n", startNode);
+
+    // Explorar nodos adyacentes
+    for (int i = 0; i < numNodes; i++) {
+        if (adj[startNode][i] == ISADJACENT && visitedNodes[i] == NOTVISITED) {
+            depthFirstSearch(adj, numNodes, i);
+        }
+    }
+}
+
 // Función para imprimir el menú y obtener la opción del usuario
 int printMenu() {
     int option;
 
     printf("Menu:\n");
-    printf("1. Mostrar orden de nodos visitados\n");
-    printf("2. No mostrar orden de nodos visitados\n");
+    printf("1. Busqueda en profundidad\n");
+    printf("2. Busqueda en anchura\n");
     printf("Elija una opción: ");
     scanf("%d", &option);
 
@@ -114,5 +135,5 @@ int printMenu() {
         scanf("%d", &option);
     }
 
-    return option == 1;
+    return option;
 }
