@@ -58,7 +58,7 @@ int main(int argc, char const *argv[])
 
   Coordinate start = {0, 0};
 
-  Coordinate target = {9, 9};
+  Coordinate target = {5, 9};
 
   printMap(start, target, map);
 
@@ -92,6 +92,7 @@ void aStar(int map[10][10], Coordinate start, Coordinate target)
       pathToTarget(current, map);
 
       printMap(start, target, map);
+      
       return;
     }
 
