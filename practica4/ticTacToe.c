@@ -15,8 +15,11 @@
 typedef int turn;
 
 void minMaxTicTacToe(int board[LEN][LEN], turn player);
+
 int minMax(int board[LEN][LEN], turn player);
+
 int checkBoardForWinningLines(int board[LEN][LEN]);
+
 void printBoard(int board[LEN][LEN]);
 
 int main(int argc, char const *argv[])
@@ -24,10 +27,11 @@ int main(int argc, char const *argv[])
   int board[LEN][LEN] = {
       {0, 0, 0},
       {0, 0, 0},
-      {0, 0, 0}};
+      {0, 0, 0}
+    };
 
   // Empieza el juego con el jugador X
-  minMaxTicTacToe(board, TURN_O);
+  minMaxTicTacToe(board, TURN_X);
 
   return 0;
 }
