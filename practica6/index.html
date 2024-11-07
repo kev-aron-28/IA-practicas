@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Control de Ventilador para Aula</title>
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+    }
+
+    #container {
+      display: flex;
+      align-items: center;
+      gap: 50px;
+      justify-content: center;
+    }
+
+    .fan-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 200px;
+      height: 200px;
+    }
+
+    /* Estilo del ventilador */
+    .fan {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: #3498db;
+      animation: spin 2s linear infinite;
+    }
+
+    .blade {
+      position: absolute;
+      width: 50%;
+      height: 15px;
+      background-color: #2980b9;
+      border-radius: 10px;
+      top: 50%;
+      left: 50%;
+      transform-origin: 0% 50%;
+      transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+    .blade:nth-child(1) { transform: translate(-50%, -50%) rotate(0deg); }
+    .blade:nth-child(2) { transform: translate(-50%, -50%) rotate(120deg); }
+    .blade:nth-child(3) { transform: translate(-50%, -50%) rotate(240deg); }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    #class {
+      width: 500px;
+      height: 500px;
+      background-color: #e5e5e5;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 5px;
+      padding: 20px;
+    }
+
+    .seat {
+      width: 70px;
+      height: 70px;
+      background-color: blue;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 24px;
+    }
+
+    .occupied { background-color: red; }
+    #temperature { font-size: 24px; margin-top: 20px; text-align: center; }
+  </style>
+</head>
+
+<body>
+
+  <div id="container">
+    <div class="fan-container">
+      <div class="fan" id="fan">
+        <div class="blade"></div>
+        <div class="blade"></div>
+        <div class="blade"></div>
+      </div>
+    </div>
+    <div id="class">
+      <!-- Asientos en el aula -->
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+      <div class="seat"></div>
+    </div>
+  </div>
+
+  <!-- Display de temperatura -->
+  <div id="temperature">Temperatura: 20°C</div>
+
+  <script>
+    const fan = document.getElementById("fan");
+    const seats = document.querySelectorAll(".seat");
+    const tempDisplay = document.getElementById("temperature");
+    const maxStudents = 36;
+    let currentStudents = 0;
+
+    // Función para mantener la temperatura constante y ajustar la velocidad del ventilador
+    function adjustFanSpeed() {
+      // Calcular la velocidad en función de la cantidad de estudiantes (máximo 36)
+      //La fórmula const speed = 2 - ((currentStudents / maxStudents) * 1.5); se utiliza para calcular la duración de la animación de giro del ventilador en función de la cantidad de estudiantes presentes en el aula. Aquí te explico en detalle el razonamiento detrás de esta fórmula:
+      const speed = 2 - ((currentStudents / maxStudents) * 1.5); // velocidad entre 0.5s (aula llena) y 2s (aula vacía)
+
+      // Ajustar la velocidad de animación del ventilador
+      fan.style.animationDuration = `${speed}s`;
+      tempDisplay.textContent = "Velocidad: " + speed ; // Temperatura constante
+    }
+
+    // Evento para cada asiento
+    seats.forEach((seat) => {
+      seat.addEventListener("click", () => {
+        // Cambiar el estado del asiento y ajustar el conteo de estudiantes
+        if (seat.classList.toggle("occupied")) {
+          currentStudents++;
+        } else {
+          currentStudents--;
+        }
+
+        // Ajustar la velocidad del ventilador después de cada cambio de ocupación
+        adjustFanSpeed();
+      });
+    });
+
+    // Configuración inicial
+    adjustFanSpeed();
+  </script>
+
+</body>
+
+</html>
