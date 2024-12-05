@@ -5,20 +5,30 @@
 
 #define MAXLEN 500
 
-
-// comp: gcc ranura.c -o r -lncurses 
+// Compilación: gcc ranura.c -o r -lncurses
 void init_colors() {
     start_color();
     init_pair(1, COLOR_CYAN, COLOR_BLACK);   // Títulos
     init_pair(2, COLOR_WHITE, COLOR_BLUE);   // Fondo de entrada
-    init_pair(3, COLOR_GREEN, COLOR_BLACK);  // Resultados
-    init_pair(4, COLOR_RED, COLOR_BLACK);    // Mensajes de error
+    init_pair(3, COLOR_GREEN, COLOR_BLACK);  // Encendido
+    init_pair(4, COLOR_RED, COLOR_BLACK);    // Apagado
+    init_pair(5, COLOR_YELLOW, COLOR_BLACK); // Mensajes de error
+}
+
+// Dibuja un recuadro con caracteres simples
+void draw_box(int y, int x, int color, const char* label) {
+    attron(COLOR_PAIR(color));
+    mvprintw(y - 1, x - 4, "+------+");
+    mvprintw(y, x - 4, "| %s |", label);
+    mvprintw(y + 1, x - 4, "+------+");
+    attroff(COLOR_PAIR(color));
 }
 
 int main(int argc, char const *argv[])
 {
     char input[MAXLEN] = {0};
-    char origen[50], destino[50], fecha[50];
+    char dispositivo[50], ubicacion[50], hora[50];
+    char comando[10];
     int ch, pos = 0;
 
     initscr();
@@ -29,12 +39,12 @@ int main(int argc, char const *argv[])
 
     attron(COLOR_PAIR(1));
     box(stdscr, 0, 0);
-    mvprintw(1, 2, "Sistema de Reservas de Vuelo");
+    mvprintw(1, 2, "Sistema de Control de Dispositivos");
     attroff(COLOR_PAIR(1));
 
     attron(COLOR_PAIR(1));
     mvprintw(3, 2, "Ingresa la cadena en el formato:");
-    mvprintw(4, 4, "Reserva un vuelo de [Origen] a [Destino] el [Fecha]");
+    mvprintw(4, 4, "[Enciende/Apaga] el [Dispositivo] en [Ubicación] a las [Hora]");
     attroff(COLOR_PAIR(1));
 
     attron(COLOR_PAIR(2));
@@ -63,26 +73,39 @@ int main(int argc, char const *argv[])
     clear();
     attron(COLOR_PAIR(1));
     box(stdscr, 0, 0);
-    mvprintw(1, 2, "Resultados de la Reserva");
+    mvprintw(1, 2, "Resultados de Control");
     attroff(COLOR_PAIR(1));
 
-    if (sscanf(input, "reserva un vuelo de %49s a %49s el %49[^\n]", origen, destino, fecha) == 3)
-    {
-        attron(COLOR_PAIR(3));
-        mvprintw(3, 2, "Origen: %s", origen);
-        mvprintw(4, 2, "Destino: %s", destino);
-        mvprintw(5, 2, "Fecha: %s", fecha);
-        attroff(COLOR_PAIR(3));
-    }
-    else
-    {
-        attron(COLOR_PAIR(4));
+    if (sscanf(input, "%9s el %49s en %49s a las %49[^\n]", comando, dispositivo, ubicacion, hora) == 4) {
+        if (strncasecmp(comando, "enciende", 8) == 0) {
+            attron(COLOR_PAIR(3));
+            mvprintw(3, 2, "Acción: Encender");
+            mvprintw(4, 2, "Dispositivo: %s", dispositivo);
+            mvprintw(5, 2, "Ubicación: %s", ubicacion);
+            mvprintw(6, 2, "Hora: %s", hora);
+            attroff(COLOR_PAIR(3));
+
+        } else if (strncasecmp(comando, "apaga", 5) == 0) {
+            attron(COLOR_PAIR(4));
+            mvprintw(3, 2, "Acción: Apagar");
+            mvprintw(4, 2, "Dispositivo: %s", dispositivo);
+            mvprintw(5, 2, "Ubicación: %s", ubicacion);
+            mvprintw(6, 2, "Hora: %s", hora);
+            attroff(COLOR_PAIR(4));
+
+        } else {
+            attron(COLOR_PAIR(5));
+            mvprintw(3, 2, "Error: Comando no reconocido.");
+            attroff(COLOR_PAIR(5));
+        }
+    } else {
+        attron(COLOR_PAIR(5));
         mvprintw(3, 2, "Error: No se pudo analizar correctamente la cadena.");
-        attroff(COLOR_PAIR(4));
+        attroff(COLOR_PAIR(5));
     }
 
     attron(COLOR_PAIR(1));
-    mvprintw(7, 2, "Presiona cualquier tecla para salir...");
+    mvprintw(15, 2, "Presiona cualquier tecla para salir...");
     attroff(COLOR_PAIR(1));
     refresh();
 
