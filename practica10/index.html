@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clasificación de Riesgo Cardíaco</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f9f9f9;
+    }
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    label {
+      font-weight: bold;
+      margin-top: 10px;
+      display: block;
+    }
+    input[type="number"] {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .result {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 18px;
+    }
+    .help {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Clasificación de Riesgo Cardíaco</h1>
+    <form id="riskForm">
+      <label for="age">Edad:</label>
+      <input type="number" id="age" name="age" min="0" required>
+
+      <label for="bloodPressure">Presión Arterial (mmHg):</label>
+      <input type="number" id="bloodPressure" name="bloodPressure" min="0" required>
+
+      <label for="cholesterol">Colesterol (mg/dL):</label>
+      <input type="number" id="cholesterol" name="cholesterol" min="0" required>
+
+      <button type="submit">Clasificar</button>
+    </form>
+
+    <div class="result" id="result"></div>
+
+    <button id="helpButton">Ayuda</button>
+    <div class="help" id="helpText" style="display: none;">
+      <p>Ingrese los valores de edad, presión arterial y colesterol del paciente.</p>
+      <p>El sistema clasificará al paciente como de "alto riesgo" o "bajo riesgo" en función de estos valores.</p>
+      <ul>
+        <li>Edad &gt; 50 años aumenta el riesgo.</li>
+        <li>Presión arterial &gt; 140 mmHg aumenta el riesgo.</li>
+        <li>Colesterol &gt; 200 mg/dL aumenta el riesgo.</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('riskForm').addEventListener('submit', function (event) {
+      event.preventDefault();
+
+      const age = parseInt(document.getElementById('age').value);
+      const bloodPressure = parseInt(document.getElementById('bloodPressure').value);
+      const cholesterol = parseInt(document.getElementById('cholesterol').value);
+
+      let risk = "Bajo Riesgo";
+      if (age > 50 || bloodPressure > 140 || cholesterol > 200) {
+        risk = "Alto Riesgo";
+      }
+
+      document.getElementById('result').textContent = `El paciente es clasificado como: ${risk}`;
+    });
+
+    document.getElementById('helpButton').addEventListener('click', function () {
+      const helpText = document.getElementById('helpText');
+      if (helpText.style.display === 'none') {
+        helpText.style.display = 'block';
+      } else {
+        helpText.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>

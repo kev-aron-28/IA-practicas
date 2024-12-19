@@ -1,0 +1,45 @@
+# Visualizador de KNN para Clasificación de Imágenes
+
+Este programa es una aplicación en C que implementa un clasificador de K-Nearest Neighbors (KNN) para imágenes en escala de grises de 28x28 píxeles. Utiliza SDL2 y SDL_ttf para mostrar visualmente las imágenes de prueba, predicciones y precisión del modelo.
+
+## Características
+
+- Carga imágenes y etiquetas en formato IDX.
+- Clasifica imágenes de prueba usando el algoritmo KNN con \( k = 3 \).
+- Visualiza cada imagen de prueba junto con la predicción y la precisión general.
+- Muestra resultados en tiempo real con una interfaz gráfica simple.
+
+## Requisitos
+
+Antes de ejecutar el programa, asegúrate de cumplir con los siguientes requisitos:
+
+### Dependencias
+- [SDL2](https://www.libsdl.org/)
+- [SDL2_ttf](https://www.libsdl.org/projects/SDL_ttf/)
+- Compilador compatible con C (como GCC)
+
+### Archivos de datos
+- `train-images.idx3-ubyte`: Archivo con las imágenes de entrenamiento.
+- `train-labels.idx1-ubyte`: Archivo con las etiquetas de entrenamiento.
+- `t10k-images.idx3-ubyte`: Archivo con las imágenes de prueba.
+- `t10k-labels.idx1-ubyte`: Archivo con las etiquetas de prueba.
+
+Puedes descargar estos archivos del dataset [MNIST](https://github.com/sunsided/mnist/tree/master).
+
+### Fuente
+El programa utiliza la fuente `arial.ttf`. Asegúrate de incluir este archivo en el directorio de trabajo.
+
+### Linux
+1. Instala las bibliotecas SDL2 y SDL_ttf:
+   ```bash
+   sudo apt update
+   sudo apt install libsdl2-dev libsdl2-ttf-dev
+
+## Instrucciones de Uso
+
+1. **Compilar el Programa**  
+   Ejecuta el siguiente comando para compilar el programa:
+   ```bash
+   gcc knn.c -o knn_visualizer -lSDL2 -lSDL2_ttf -lm
+
+

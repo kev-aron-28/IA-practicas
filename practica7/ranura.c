@@ -44,7 +44,11 @@ int main(int argc, char const *argv[])
 
     attron(COLOR_PAIR(1));
     mvprintw(3, 2, "Ingresa la cadena en el formato:");
+<<<<<<< HEAD
     mvprintw(4, 4, "[Enciende/Apaga] el [Dispositivo] en [Ubicación] a las [Hora]");
+=======
+    mvprintw(4, 4, "reserva un vuelo de [Origen] a [Destino] el [Fecha]");
+>>>>>>> 8c01dea (chore(shared): user has now associated each module it can access)
     attroff(COLOR_PAIR(1));
 
     attron(COLOR_PAIR(2));
@@ -76,6 +80,7 @@ int main(int argc, char const *argv[])
     mvprintw(1, 2, "Resultados de Control");
     attroff(COLOR_PAIR(1));
 
+<<<<<<< HEAD
     if (sscanf(input, "%9s el %49s en %49s a las %49[^\n]", comando, dispositivo, ubicacion, hora) == 4) {
         if (strncasecmp(comando, "enciende", 8) == 0) {
             attron(COLOR_PAIR(3));
@@ -100,6 +105,26 @@ int main(int argc, char const *argv[])
         }
     } else {
         attron(COLOR_PAIR(5));
+=======
+    if (sscanf(input, "reserva un vuelo de %49s a %49s el %49[^\n]", origen, destino, fecha) == 3)
+    {
+        attron(COLOR_PAIR(3));
+        mvprintw(3, 2, "Origen: %s", origen);
+        mvprintw(4, 2, "Destino: %s", destino);
+        mvprintw(5, 2, "Fecha: %s", fecha);
+        attroff(COLOR_PAIR(3));
+    } 
+    else if (sscanf(input, "reserva un vuelo desde %49s a %49s el %49[^\n]", origen, destino, fecha) == 3) {
+        attron(COLOR_PAIR(3));
+        mvprintw(3, 2, "Origen: %s", origen);
+        mvprintw(4, 2, "Destino: %s", destino);
+        mvprintw(5, 2, "Fecha: %s", fecha);
+        attroff(COLOR_PAIR(3));
+    }
+    else
+    {
+        attron(COLOR_PAIR(4));
+>>>>>>> 8c01dea (chore(shared): user has now associated each module it can access)
         mvprintw(3, 2, "Error: No se pudo analizar correctamente la cadena.");
         attroff(COLOR_PAIR(5));
     }

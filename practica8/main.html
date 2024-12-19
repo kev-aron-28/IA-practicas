@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Load TensorFlow.js -->
+    <script src="scripts/tfjs.js"></script>
+    <!-- Load MobileNet -->
+    <script src="scripts/mobilenet.js"></script>
+    <!-- Load KNN Classifier -->
+    <script src="scripts/knn-classifier.js"></script>
+  </head>
+  <body>
+    <h1>Clasificador KNN con MobileNet</h1>
+    <img id="class0" src="images/1.png" />
+    <img id="class1" src="images/1.png" />
+    <img id="test" src="images/1.png" />
+    <p id="result">Predicción: Cargando...</p>
+  </body>
+  <script>
+    async function init() {
+      try {
+        // Crear el clasificador.
+        const classifier = knnClassifier.create();
+
+        // Cargar MobileNet.
+        const mobilenetModule = await mobilenet.load();
+
+        // Función para procesar una imagen.
+        const processImage = (imageId) => {
+          const img = document.getElementById(imageId);
+          const tensor = tf.browser.fromPixels(img)
+            .resizeNearestNeighbor([224, 224]) // Redimensionar
+            .toFloat()
+            .div(255) // Normalizar a [0, 1]
+            .expandDims(); // Añadir batch dimension
+          return mobilenetModule.infer(tensor, true); // Extraer características
+        };
+
+        // Añadir ejemplos al clasificador.
+        const logits0 = processImage("class0");
+        classifier.addExample(logits0, 0);
+        logits0.dispose(); // Liberar memoria
+
+        const logits1 = processImage("class1");
+        classifier.addExample(logits1, 1);
+        logits1.dispose(); // Liberar memoria
+
+        // Realizar una predicción.
+        const testLogits = processImage("test");
+        const result = await classifier.predictClass(testLogits);
+
+        testLogits.dispose(); // Liberar memoria
+
+        // Mostrar el resultado.
+        document.getElementById("result").innerText =
+          `Predicción: Clase ${result.label} con probabilidad ${(result.confidences[result.label] * 100).toFixed(2)}%`;
+
+      } catch (error) {
+        console.error("Error durante la ejecución:", error);
+        document.getElementById("result").innerText = "Error al realizar la predicción.";
+      }
+    }
+
+    init();
+  </script>
+</html>
