@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>House Price Prediction</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .results {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Predicción de Precios de Casas</h1>
+    <p>Este ejemplo utiliza TensorFlow.js para predecir precios de casas utilizando una red neuronal simple.</p>
+    <button onclick="trainModel()">Entrenar modelo</button>
+    <button onclick="predict()">Predecir precios</button>
+    <div class="results">
+        <h2>Resultados:</h2>
+        <pre id="output"></pre>
+    </div>
+
+    <script>
+        // Generación de datos sintéticos
+        const data = [
+            { size: 1500, rooms: 3, baths: 2, location: 1, price: 300000 },
+            { size: 1700, rooms: 4, baths: 2, location: 2, price: 350000 },
+            { size: 2000, rooms: 4, baths: 3, location: 1, price: 400000 },
+            { size: 2100, rooms: 5, baths: 3, location: 3, price: 450000 },
+            { size: 1800, rooms: 3, baths: 2, location: 1, price: 320000 },
+            { size: 1600, rooms: 3, baths: 1, location: 2, price: 310000 },
+            { size: 2500, rooms: 5, baths: 4, location: 3, price: 500000 },
+            { size: 2400, rooms: 4, baths: 3, location: 2, price: 480000 },
+            { size: 2200, rooms: 5, baths: 3, location: 3, price: 460000 },
+            { size: 1900, rooms: 3, baths: 2, location: 1, price: 330000 }
+        ];
+
+        // Normalización de datos
+        const normalize = (arr) => {
+            const max = Math.max(...arr);
+            const min = Math.min(...arr);
+            return arr.map(value => (value - min) / (max - min));
+        };
+
+        // Preparar datos
+        const features = data.map(d => [d.size, d.rooms, d.baths, d.location]);
+        const labels = data.map(d => d.price);
+
+        const normalizedFeatures = tf.tensor(features.map(row => normalize(row)));
+        const normalizedLabels = tf.tensor(normalize(labels));
+
+        // Calcular valores máximos y mínimos de los precios
+        const maxPrice = Math.max(...labels);
+        const minPrice = Math.min(...labels);
+
+        // Crear el modelo
+        const model = tf.sequential();
+        model.add(tf.layers.dense({ inputShape: [4], units: 16, activation: 'relu' }));
+        model.add(tf.layers.dense({ units: 8, activation: 'relu' }));
+        model.add(tf.layers.dense({ units: 1 }));
+
+        model.compile({
+            optimizer: tf.train.adam(),
+            loss: 'meanSquaredError',
+            metrics: ['mse']
+        });
+
+        // Entrenar el modelo
+        async function trainModel() {
+            document.getElementById('output').innerText = 'Entrenando modelo...';
+
+            const history = await model.fit(normalizedFeatures, normalizedLabels, {
+                epochs: 100,
+                batchSize: 16,
+                callbacks: {
+                    onEpochEnd: (epoch, logs) => {
+                        document.getElementById('output').innerText = `Epoch: ${epoch + 1}, Loss: ${logs.loss.toFixed(5)}`;
+                    }
+                }
+            });
+
+            console.log(history);
+
+            document.getElementById('output').innerText = 'Modelo entrenado con éxito.';
+        }
+
+        // Función para predecir el precio
+        function predict() {
+            const testInput = [1800, 4, 2, 2]; // Ejemplo de entrada
+
+            // Normalizar la entrada de prueba
+            const normalizedTestInput = normalize(testInput);
+
+            // Predecir
+            const inputTensor = tf.tensor([normalizedTestInput]);
+            const prediction = model.predict(inputTensor).dataSync();
+
+            // Desnormalizar el precio predicho
+            const denormalizedPrice = (prediction[0] * (maxPrice - minPrice)) + minPrice;
+
+            document.getElementById('output').innerText = `Predicción: El precio estimado es $${denormalizedPrice.toFixed(2)}`;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Optimización de Portafolio</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        .section h2 {
+            color: #0056b3;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #003d82;
+        }
+        .results {
+            margin-top: 20px;
+            background-color: #f4f4f4;
+            padding: 20px;
+            border: 1px solid #ccc;
+        }
+        .help-button {
+            margin-top: 10px;
+            background-color: #ffa500;
+        }
+    </style>
+</head>
+<body>
+    <h1>Optimización de Portafolio</h1>
+
+    <div class="section">
+        <h2>1. Ingresar Activos</h2>
+        <form id="assetsForm">
+            <label for="expectedReturns">Retornos esperados (separados por comas):</label>
+            <input type="text" id="expectedReturns" name="expectedReturns" placeholder="Ejemplo: 0.1, 0.2, 0.15" required>
+
+            <label for="variances">Varianzas (separadas por comas):</label>
+            <input type="text" id="variances" name="variances" placeholder="Ejemplo: 0.05, 0.07, 0.06" required>
+
+            <button type="button" onclick="optimizePortfolio()">Optimizar Portafolio</button>
+            <button type="button" class="help-button" onclick="showHelp()">Ayuda</button>
+        </form>
+        <div class="results" id="portfolioResult"></div>
+    </div>
+
+    <script>
+        function optimizePortfolio() {
+            const returnsInput = document.getElementById('expectedReturns').value;
+            const variancesInput = document.getElementById('variances').value;
+
+            // Parse inputs
+            const returns = returnsInput.split(',').map(Number);
+            const variances = variancesInput.split(',').map(Number);
+
+            if (returns.length !== variances.length || returns.length === 0) {
+                alert('Por favor, asegúrese de que los retornos y las varianzas tengan la misma cantidad de valores.');
+                return;
+            }
+
+            // Simple optimization: equal weight distribution
+            const numAssets = returns.length;
+            const proportions = Array(numAssets).fill(1 / numAssets);
+
+            // Calculate expected portfolio return and risk
+            const portfolioReturn = proportions.reduce((acc, prop, idx) => acc + prop * returns[idx], 0);
+            const portfolioRisk = proportions.reduce((acc, prop, idx) => acc + prop * variances[idx], 0);
+
+            // Display results
+            document.getElementById('portfolioResult').innerHTML = `
+                <h3>Resultados de la Optimización</h3>
+                <p><strong>Proporciones de Inversión:</strong> ${proportions.map(p => p.toFixed(2)).join(', ')}</p>
+                <p><strong>Retorno Esperado del Portafolio:</strong> ${portfolioReturn.toFixed(2)}</p>
+                <p><strong>Riesgo del Portafolio (Varianza):</strong> ${portfolioRisk.toFixed(2)}</p>
+            `;
+        }
+
+        function showHelp() {
+            alert(`Ayuda para Optimización de Portafolio:\n\n- Ingrese los retornos esperados de los activos como números separados por comas.\n  Ejemplo: 0.1, 0.2, 0.15\n\n- Ingrese las varianzas de los activos como números separados por comas.\n  Ejemplo: 0.05, 0.07, 0.06\n\nEl algoritmo calculará una distribución inicial simple con proporciones iguales y mostrará el retorno esperado y el riesgo del portafolio.`);
+        }
+    </script>
+</body>
+</html>
